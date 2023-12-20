@@ -1,3 +1,20 @@
 In this project a custom CNN was trained to classify images of people into two categories: sad and happy. The model returnt the probability of Sad fase, so all faces with probability higher then 0.38 are meant Sad. Other are Happy.
 
-First I wanted to use pretrained CNN, 
+First I wanted to use pretrained CNN, but at the first look all models from https://keras.io/api/applications/ performed terrible. They didn't even predict a person on the images. So decided to find some keras-based models for person recognition and found vgg-face, which is not supported now)) I tried to use it, but it was extremely slow. So I decided to train a custom CNN. I've reached the 0.843 accuracy on validation dataset. Then made a docker container as folloving:
+docker build -t sad_or_happy_image .
+docker run -it --rm -p 8080:8080 sad_or_happy_image:latest
+
+And pushed it to my aws ecr:
+aws ecr create-repository --repository-name sad_or_happy_images
+docker login -u AWS -p $(aws ecr get-login-password --region eu-west-1) 019406907121.dkr.ecr.eu-west-1.amazonaws.com
+docker tag sad_or_happy_image:latest 019406907121.dkr.ecr.eu-west-1.amazonaws.com/sad_or_happy_images:sad_or_happy_model_001
+docker push 019406907121.dkr.ecr.eu-west-1.amazonaws.com/sad_or_happy_images:sad_or_happy_model_001
+
+After that I created a Lambda function and API Gateway via aws web interface. You can test both models using links:
+custom CNN:	https://j1td1a2v7d.execute-api.eu-west-1.amazonaws.com/test/predict
+xception:	https://t22jqto1bc.execute-api.eu-west-1.amazonaws.com/test-it/predict
+
+For testing:
+- make your image rectangle
+- 
+
