@@ -1,0 +1,3 @@
+In this project a custom CNN was trained to classify images of people into two categories: sad and happy. The model returnt the probability of Sad fase, so all faces with probability higher then 0.38 are meant Sad. Other are Happy.
+
+First I wanted to use pretrained CNN, 
